@@ -17,6 +17,7 @@ import DraftWineBanner from './DraftWineBanner';
 import MaturityPhaseTable from './MaturityPhaseTable';
 import PriceHistoryTimeline from './PriceHistoryTimeline';
 import PriceTrackingToggle from './PriceTrackingToggle';
+import { formatVintage } from '../../utils/vintage';
 
 function ViewDetails({ bottle, rackInfo, cellarId, vintageProfile, priceHistory, currentRelease, rates, userCurrency, canEdit, hasImage, onEdit, onRemove, onReportWine, suggestFixSignal = 0, wineDraft = null, onDraftChanged, draftNotice = null, recordFold = null }) {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ function ViewDetails({ bottle, rackInfo, cellarId, vintageProfile, priceHistory,
       <div className="bd-detail-grid">
         <div className="bd-detail-item">
           <span className="bd-detail-label">{t('bottleDetail.vintage')}</span>
-          <span className="bd-detail-value">{bottle.vintage}</span>
+          <span className="bd-detail-value">{formatVintage(bottle.vintage, t)}</span>
         </div>
         {bottle.bottleSize && (
           <div className="bd-detail-item">
@@ -96,7 +97,7 @@ function ViewDetails({ bottle, rackInfo, cellarId, vintageProfile, priceHistory,
             <span className="bd-detail-value">
               {currentRelease.medianPrice.toLocaleString()} {currentRelease.currency}
               {currentRelease.vintage && (
-                <span className="bd-detail-converted"> &middot; {currentRelease.vintage}</span>
+                <span className="bd-detail-converted"> &middot; {formatVintage(currentRelease.vintage, t)}</span>
               )}
               {(() => {
                 const c = convertAmountHistorical(currentRelease.medianPrice, currentRelease.currency, userCurrency, null, rates);
