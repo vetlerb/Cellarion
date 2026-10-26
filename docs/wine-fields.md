@@ -4,7 +4,7 @@ Three fields on a registry wine describe what the bottle *is*, and they are easy
 
 It is written for contributors filing corrections, sommeliers reviewing them, and anyone writing a prompt or an MCP schema that produces these fields.
 
-> **Status: draft.** The rules below were settled in the discussion that led to #1700. Some of the enforcement is still being built there; those rows are marked *planned* in the tables.
+> **Status: draft.** The rules come from discussion #1696 and are tracked in #1700. Two conventions are still open for comment there and are marked *proposed* below: tier words printed in the name, and production-method terms. Enforcement still being built in #1700 is marked *planned* in the tables.
 
 ---
 
@@ -27,9 +27,9 @@ The name is what distinguishes the bottle within the producer's range, without t
 - **Producer out.** "Cloudy Bay Sauvignon Blanc" is name "Sauvignon Blanc", producer "Cloudy Bay".
 - **Estate wines take the estate's name.** A château's grand vin with no separate cuvée name has name equal to producer: name "Château Margaux", producer "Château Margaux". This is correct, not a duplicate.
 - **A classification line on its own is never a name.** "Grand Cru Classé en 1855" printed under the estate goes in `classification`; the name falls back to the estate.
-- **Tier words printed as part of the name stay in the name.** "Riesling Spätlese", "Rioja Gran Reserva": the word stays, *and* `classification` is set too (see [Tier words in two fields](#tier-words-in-two-fields)).
+- **Tier words printed as part of the name stay in the name** (*proposed*). "Riesling Spätlese", "Rioja Gran Reserva": the word stays, *and* `classification` is set too (see [Tier words in two fields](#tier-words-in-two-fields)).
 - **A tier word may stand alone as the name** when the producer's range uses it as the wine's name: the Rioja convention (Crianza, Reserva, Gran Reserva) and Champagne co-op cuvées. Premier Cru and Grand Cru in Burgundy and its peers are appellation material instead.
-- **Production method is not name material**, unless the label prints it as part of the cuvée's own name.
+- **Production method is not name material** (*proposed*), unless the label prints it as part of the cuvée's own name.
 
 ## appellation
 
@@ -39,7 +39,7 @@ The appellation is the appellation **as the register names it, without the regul
 - **Tier words that are part of the legal name stay.** "Chablis Premier Cru", "Saint-Émilion Grand Cru", "Alsace Grand Cru", "Gevrey-Chambertin Premier Cru" are the appellations themselves. The registry holds several hundred of these and they are correct. Do not move Premier Cru or Grand Cru out of the appellation in these regions.
 - **Some marks are the official form.** "Kamptal DAC" and "VQA Ontario" keep their mark, because that is how the register names them.
 - **A bare Prädikat is not an appellation.** "Spätlese" alone in the appellation field is moved to `classification` automatically.
-- **Production method is not an appellation.** "Metodo Classico", "Méthode Traditionnelle", "Méthode Cap Classique" do not go here (*planned:* the prompts that put them here are being corrected).
+- **Production method is not an appellation** (*proposed*). "Metodo Classico", "Méthode Traditionnelle", "Méthode Cap Classique" do not go here. Only a handful of registry rows hold one today.
 
 ## classification
 
@@ -49,6 +49,8 @@ The classification is a quality tier on top of the appellation: Riserva, Reserva
 - **Leave it empty** when the label states no tier. Do not infer one: "Cuvée Réservée" or "Réserve" is marketing, not a classification.
 
 ### Tier words in two fields
+
+*Proposed; open for comment in #1696.*
 
 When the label prints a tier as part of the wine's name, the word goes in **both** `name` and `classification`.
 
@@ -87,9 +89,11 @@ Notes on the examples:
 | Move a bare Prädikat from appellation to classification | `splitPradikatFromAppellation` in `backend/src/utils/styleTerms.js` | In place |
 | Keep a Kabinett and a Spätlese from one estate apart | `conflictingStyleTerms` in `backend/src/utils/styleTerms.js` | In place |
 | A Bordeaux classification line is not a name | `unpolluteEstateName` / `CLASSIFICATION_ONLY_NAME_RX` in `backend/src/services/findOrCreateWine.js` | In place |
-| Prompts ask for a tier, not a regulatory mark | `backend/src/config/aiConfig.js` | Planned (#1700) |
+| Prompts ask for a tier, not a regulatory mark (label scan, back label, import lookup, text search, valuation) | `backend/src/config/aiConfig.js` | Planned (#1700) |
 | Production method out of the appellation | `backend/src/config/aiConfig.js` | Planned (#1700) |
-| Strip regulatory marks from classification, plus backfill | write path and a backfill script | Planned (#1700) |
+| Strip regulatory marks from classification on every write path | `normalizeClassification` (new) | Planned (#1700) |
+| Backfill existing classifications, dry run by default | backfill script (new) | Planned (#1700) |
+| `classification` on the admin wine edit route and form | admin route and form | Planned (#1700) |
 | `classification` on `add_bottle`, `bulk_add`, `resolve_wine`, `admin_add_registry_wine` | `backend/src/mcp/tools/write.js`, `adminRegistry.js` | Planned (#1700) |
 | Field descriptions on `appellation`, `region`, `classification` in MCP schemas | `backend/src/mcp/tools/` | Planned (#1700) |
 
