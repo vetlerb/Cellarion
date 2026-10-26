@@ -4,7 +4,7 @@ Three fields on a registry wine describe what the bottle *is*, and they are easy
 
 It is written for contributors filing corrections, sommeliers reviewing them, and anyone writing a prompt or an MCP schema that produces these fields.
 
-> **Status: draft.** The rules come from discussion #1696 and are tracked in #1700; most of the enforcement lands in #1701. Two conventions are still open for comment in the discussion and are marked *proposed* below: tier words printed in the name, and production-method terms.
+> **Status: draft.** The rules come from discussion #1696 and are tracked in #1700; the enforcement landed in #1701. Two conventions are still open for comment in the discussion and are marked *proposed* below: tier words printed in the name, and production-method terms.
 
 ---
 
