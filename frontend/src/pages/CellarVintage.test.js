@@ -525,3 +525,42 @@ describe('NV maturity', () => {
     expect(await screen.findByText('bottleDetail.awaitingSommelier')).toBeInTheDocument();
   });
 });
+
+// The serving line, the bottle page's rule: the sommelier's trait (or the
+// style's default) read against the phase today, the bottles' own window first.
+describe('serving', () => {
+  const servingLine = async () => {
+    await screen.findByText('cellarVintageBeta.wineTitle');
+    await waitFor(() => expect(document.querySelector('.bd-serving')).not.toBeNull());
+    return document.querySelector('.bd-serving').textContent;
+  };
+
+  test('the style\'s default until a sommelier sets one, with the advice for the shared window\'s phase', async () => {
+    renderPage();
+    // A red with no body: 15–18 °C; the bottles' own window (2025–2045) is at peak.
+    expect(await servingLine()).toBe('serving.today:{"range":"15–18 °C","air":"serving.air.pour"}');
+  });
+
+  test('the sommelier\'s temperature and air trait, in the reader\'s unit', async () => {
+    page.wine = { ...WINE, aiProfile: { ...WINE.aiProfile, servingTempMin: 16, servingTempMax: 18, needsAir: 'long' } };
+    auth.user.preferences.temperatureUnit = 'F';
+    renderPage();
+    expect(await servingLine()).toBe('serving.today:{"range":"61–64 °F","air":"serving.air.decant_short"}');
+  });
+
+  test('windows that differ between the bottles: the sommelier\'s window gives the phase', async () => {
+    page.bottles = [page.bottles[0], { ...page.bottles[1], drinkFrom: 2030 }];
+    renderPage();
+    // The sommelier's peak starts in 2030: early today, so a red is opened ahead.
+    expect(await servingLine()).toBe('serving.today:{"range":"15–18 °C","air":"serving.air.open_ahead"}');
+  });
+
+  test('a drink that is not wine has no serving line', async () => {
+    page.wine = { ...WINE, nonWine: true };
+    renderPage();
+    await screen.findByText('cellarVintageBeta.wineTitle');
+    await waitFor(() => expect(api.mock.calls.some(([u]) => u.startsWith('/api/somm/maturity/lookup'))).toBe(true));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(document.querySelector('.bd-serving')).toBeNull();
+  });
+});

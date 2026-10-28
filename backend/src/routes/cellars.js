@@ -1155,7 +1155,9 @@ router.get('/:id/history', async (req, res) => {
 // their own routes, as on the bottle page.
 const VINTAGE_PAGE_LIMIT = 500;
 const VINTAGE_SHARED_FIELDS = ['notes', 'drinkFrom', 'drinkTo', 'peakFrom', 'peakUntil'];
-const VINTAGE_PROFILE_SELECT = ['description', 'body', 'tannin', 'acidity', 'sweetness', 'flavors', 'foodPairings', 'source']
+const VINTAGE_PROFILE_SELECT = ['description', 'body', 'tannin', 'acidity', 'sweetness', 'flavors', 'foodPairings', 'source',
+  // The serving trait, for the page's serving line (utils/serving).
+  'servingTempMin', 'servingTempMax', 'needsAir']
   .map((f) => `aiProfile.${f}`).join(' ');
 router.get('/:id/vintages/:wineId/:vintage', async (req, res) => {
   try {

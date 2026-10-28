@@ -235,7 +235,8 @@ describe('GET /api/cellars/:id/vintages/:wineId/:vintage', () => {
     // registry's bookkeeping (confidence, held reason, producer doubts).
     expect(WineDefinition.findById).toHaveBeenCalledWith(WINE);
     const fields = profileSelect.mock.calls[0][0].split(' ');
-    expect(fields).toEqual(expect.arrayContaining(['aiProfile.description', 'aiProfile.flavors', 'aiProfile.source']));
+    expect(fields).toEqual(expect.arrayContaining(['aiProfile.description', 'aiProfile.flavors', 'aiProfile.source',
+      'aiProfile.servingTempMin', 'aiProfile.servingTempMax', 'aiProfile.needsAir']));
     expect(fields.some((f) => /confidence|held|producer/i.test(f))).toBe(false);
 
     WineDefinition.findById.mockReturnValue({ select: () => ({ lean: async () => { throw new Error('db down'); } }) });

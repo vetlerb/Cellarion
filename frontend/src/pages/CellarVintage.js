@@ -25,7 +25,9 @@ import PriceHistoryTimeline from '../components/bottle/PriceHistoryTimeline';
 import PriceTrackingToggle from '../components/bottle/PriceTrackingToggle';
 import { fetchRates } from '../utils/currency';
 import JournalPrompt, { journalPromptOptedOut } from '../components/JournalPrompt';
-import { getMaturityStatus, maturityBadgeText } from '../utils/drinkStatus';
+import { getMaturityStatus, getPersonalWindowStatus, maturityBadgeText } from '../utils/drinkStatus';
+import { servingAdvice, servingText } from '../utils/serving';
+import { temperatureUnitOf } from '../utils/temperature';
 import { bottleAnchorYear } from '../utils/maturityUtils';
 import { totalsByCurrency } from '../utils/onOrder';
 import { isReserved, reservationSummary } from '../utils/reservation';
@@ -288,6 +290,17 @@ function CellarVintage() {
   const nvUnanchored = isNv && !!profile?.relative && !Number.isFinite(anchorYear);
   const profileReviewed = profile?.status === 'reviewed' && (!isNv || !!profile.relative);
   const maturityStatus = profile && !nvUnanchored ? getMaturityStatus(profile, anchorYear) : null;
+  // Serving line, the bottle page's rule (ViewDetails): the sommelier's trait
+  // (or the style's default) read against the phase today — the bottles' own
+  // window when they share one, then the sommelier's. A window that differs
+  // between the bottles gives no phase, so no air advice from it.
+  // (The shared values are strings; the window status reads numbers.)
+  const year = (v) => (v == null ? null : Number(v));
+  const personalWindow = windowDiffers ? null : getPersonalWindowStatus({
+    drinkFrom: year(from), drinkTo: year(to), peakFrom: year(peakFrom), peakUntil: year(peakUntil),
+  });
+  const servingPhase = personalWindow?.status || (profileReviewed ? maturityStatus?.status : null) || null;
+  const serving = profileLoaded ? servingAdvice(wine, servingPhase) : null;
 
   // Hero, in the cards' order: a chosen or own photo of this vintage, the
   // vintage's official photo, the wine's image, then an own photo of another year.
@@ -571,6 +584,9 @@ function CellarVintage() {
                         {!nvUnanchored && <MaturityPhaseTable profile={profile} anchorYear={anchorYear} />}
                         {profile.sommNotes && <p className="bd-maturity-notes">{profile.sommNotes}</p>}
                       </div>
+                    )}
+                    {serving && (
+                      <p className="bd-maturity-note bd-serving">{servingText(serving, t, temperatureUnitOf(user))}</p>
                     )}
                   </div>
                   <div className="cvb-block">
