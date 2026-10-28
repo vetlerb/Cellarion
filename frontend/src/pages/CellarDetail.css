@@ -999,8 +999,11 @@
     width: 100%;
   }
 
+  /* The filter and sort controls wrap below the search box; that line gets
+     the same space as the banner and toolbar below it. */
   .search-row {
     flex-wrap: wrap;
+    row-gap: 0.75rem;
   }
 
   .search-row .search-input {
