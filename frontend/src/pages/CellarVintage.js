@@ -32,6 +32,8 @@ import { fetchRates } from '../utils/currency';
 import JournalPrompt, { journalPromptOptedOut } from '../components/JournalPrompt';
 import { getMaturityStatus, maturityBadgeText, getPersonalWindowStatus, personalWindowBadgeText } from '../utils/drinkStatus';
 import { bottleAnchorYear, getMaturityPhases, getPersonalWindowPhases } from '../utils/maturityUtils';
+import { servingAdvice, servingText } from '../utils/serving';
+import { temperatureUnitOf } from '../utils/temperature';
 import { totalsByCurrency } from '../utils/onOrder';
 import { isReserved, reservationSummary } from '../utils/reservation';
 import { glassesLeft, daysLeft, freshnessStatus } from '../utils/openBottle';
@@ -319,6 +321,12 @@ function CellarVintage() {
   const nvUnanchored = isNv && !!profile?.relative && !Number.isFinite(anchorYear);
   const profileReviewed = profile?.status === 'reviewed' && (!isNv || !!profile.relative);
   const maturityStatus = profile && !nvUnanchored ? getMaturityStatus(profile, anchorYear) : null;
+  // Serving line, the bottle page's rule (ViewDetails): the sommelier's trait
+  // (or the style's default) read against the phase today — the bottles' own
+  // window when they share one, then the sommelier's. A window that differs
+  // between the bottles gives no phase, so no air advice from it.
+  const servingPhase = ownWindow?.status || (profileReviewed ? maturityStatus?.status : null) || null;
+  const serving = profileLoaded ? servingAdvice(wine, servingPhase) : null;
 
   // Hero, in the cards' order: a chosen or own photo of this vintage, the
   // vintage's official photo, the wine's image, then an own photo of another year.
@@ -657,6 +665,9 @@ function CellarVintage() {
                         )}
                         {profile.sommNotes && <p className="bd-maturity-notes">{profile.sommNotes}</p>}
                       </div>
+                    )}
+                    {serving && (
+                      <p className="bd-maturity-note bd-serving">{servingText(serving, t, temperatureUnitOf(user))}</p>
                     )}
                   </div>
                   <div className="cvb-block">
