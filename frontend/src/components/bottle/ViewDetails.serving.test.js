@@ -13,6 +13,7 @@ vi.mock('react-i18next', () => ({
       const opts = (a && typeof a === 'object') ? a : (b || {});
       const text = {
         'serving.temperature': `Serve at ${opts.range}`,
+        'serving.today': `Opening it today: serve at ${opts.range}; ${opts.air}.`,
         'serving.air.decant_long': 'decant one to two hours before serving',
         'serving.air.pour': 'open and pour',
       }[key];
@@ -59,7 +60,7 @@ test('a young wine that needs air: the sommelier\'s temperature and "decant", fr
   renderDetails({ vintageProfile });
   const line = document.querySelector('.bd-serving');
   expect(line).not.toBeNull();
-  expect(line.textContent).toBe('Serve at 16–18 °C; decant one to two hours before serving.');
+  expect(line.textContent).toBe('Opening it today: serve at 16–18 °C; decant one to two hours before serving.');
 });
 
 test('with no window yet, the line shows the style\'s temperature and no guess about the wine\'s age', () => {

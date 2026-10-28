@@ -59,6 +59,7 @@
   "serving": {
     "label": "Serving",
     "temperature": "Serve at {{range}}",
+    "today": "Opening it today: serve at {{range}}; {{air}}.",
     "air": {
       "decant_long": "decant one to two hours before serving",
       "decant_short": "open thirty minutes ahead, or decant briefly",
