@@ -61,11 +61,15 @@ export function servingAdvice(wine, phase) {
   return { temperature, air };
 }
 
-/** The line the bottle page shows, translated, in the user's unit ('C' | 'F'). */
+/**
+ * The line the bottle page shows, translated, in the user's unit ('C' | 'F').
+ * With air advice the line says it is for today: the advice follows the
+ * vintage's phase, so the same bottle reads differently next year. The
+ * temperature alone holds for the wine's whole life and needs no such word.
+ */
 export function servingText(advice, t, unit = 'C') {
   if (!advice) return '';
   const range = formatTemperatureRange(advice.temperature.min, advice.temperature.max, unit);
-  const temp = t('serving.temperature', 'Serve at {{range}}', { range });
-  if (!advice.air) return `${temp}.`;
-  return `${temp}; ${t(`serving.air.${advice.air.code}`)}.`;
+  if (!advice.air) return `${t('serving.temperature', 'Serve at {{range}}', { range })}.`;
+  return t('serving.today', 'Opening it today: serve at {{range}}; {{air}}.', { range, air: t(`serving.air.${advice.air.code}`) });
 }
