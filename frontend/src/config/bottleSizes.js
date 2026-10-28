@@ -33,8 +33,9 @@ export function mlFromCode(code) {
   return m ? parseInt(m[1], 10) : null;
 }
 
-// One number formatter per language. Only the number is localised: the units
-// stay "ml" and "L", since style: 'unit' turns English "750 ml" into "750 mL".
+// One number formatter per language. The units are not Intl's: style 'unit'
+// turns English "750 ml" into "750 mL". They come from the volumeUnits keys
+// instead, so a language can write its own symbol (Norwegian "1,5 l").
 const volumeFormats = new Map();
 function volumeFormat(locale) {
   if (!volumeFormats.has(locale)) {
@@ -45,11 +46,20 @@ function volumeFormat(locale) {
   return volumeFormats.get(locale);
 }
 
-/** Format ml as a friendly volume in the chosen language: 750 → "750 ml", 1500 → "1.5 L" ("1,5 L" in nb). */
+// The unit symbol in the chosen language, or the English one before i18n is
+// set up (component tests that mock react-i18next never initialise it).
+function volumeUnit(key, fallback, locale) {
+  if (!i18n.isInitialized) return fallback;
+  return i18n.t(`volumeUnits.${key}`, { lng: locale, defaultValue: fallback }) || fallback;
+}
+
+/** Format ml as a friendly volume in the chosen language: 750 → "750 ml", 1500 → "1.5 L" ("1,5 l" in nb). */
 export function formatVolume(ml, locale = i18n.language) {
   if (!isFinite(ml) || ml <= 0) return '';
   const fmt = volumeFormat(locale);
-  return ml >= 1000 ? `${fmt.format(ml / 1000)} L` : `${fmt.format(ml)} ml`;
+  return ml >= 1000
+    ? `${fmt.format(ml / 1000)} ${volumeUnit('litre', 'L', locale)}`
+    : `${fmt.format(ml)} ${volumeUnit('millilitre', 'ml', locale)}`;
 }
 
 /** Display label for a code, e.g. "1.5 L (Magnum)" or "900 ml" for unnamed. */

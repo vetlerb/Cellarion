@@ -63,14 +63,26 @@ test('formatVolume renders a litre without trailing zeros', () => {
 });
 
 describe('formatVolume in the chosen language', () => {
+  // The unit symbols are translations; pin them here so these tests do not
+  // move when Weblate changes a language's real file.
+  beforeAll(() => {
+    i18n.addResourceBundle('nb', 'translation', { volumeUnits: { litre: 'l', millilitre: 'ml' } }, true, true);
+    i18n.addResourceBundle('sv', 'translation', { volumeUnits: { litre: 'l', millilitre: 'ml' } }, true, true);
+  });
+
   test.each([
     ['en', 1500, '1.5 L'],
-    ['nb', 1500, '1,5 L'],
-    ['sv', 1500, '1,5 L'],
+    ['nb', 1500, '1,5 l'],
+    ['sv', 1500, '1,5 l'],
+    ['nb', 750, '750 ml'],
     ['de', 187, '187 ml'],
     ['fr', 3000, '3 L'],
   ])('%s: %p ml → %p', (locale, ml, expected) => {
     expect(formatVolume(ml, locale)).toBe(expected);
+  });
+
+  test('a language without its own unit symbols falls back to the English ones', () => {
+    expect(formatVolume(1500, 'fr')).toBe('1,5 L');
   });
 
   test('keeps the "ml" unit rather than Intl\'s "mL"', () => {
@@ -80,7 +92,7 @@ describe('formatVolume in the chosen language', () => {
   test('labels follow the language the app is set to', async () => {
     await i18n.changeLanguage('nb');
     try {
-      expect(bottleSizeLabel('1500ml', t)).toBe('1,5 L (Magnum)');
+      expect(bottleSizeLabel('1500ml', t)).toBe('1,5 l (Magnum)');
     } finally {
       await i18n.changeLanguage('en');
     }

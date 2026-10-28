@@ -2892,6 +2892,10 @@
     "cancel": "Cancel request",
     "saving": "Saving…"
   },
+  "volumeUnits": {
+    "litre": "L",
+    "millilitre": "ml"
+  },
   "bottleSizeNames": {
     "split": "Split",
     "half": "Half",
