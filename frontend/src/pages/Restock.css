@@ -1,5 +1,5 @@
 .restock-page {
-  max-width: 720px;
+  max-width: var(--page-width-narrow);
   margin: 0 auto;
 }
 

@@ -1,6 +1,6 @@
 /* ── Blog list page ── */
 .blog-page {
-  max-width: 1100px;
+  max-width: var(--page-width-wide);
   margin: 0 auto;
 }
 
