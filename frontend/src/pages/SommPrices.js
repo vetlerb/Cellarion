@@ -7,6 +7,9 @@ import { declinePriceTrackingRequest } from '../api/somm';
 import WineImage from '../components/WineImage';
 import timeAgo from '../utils/timeAgo';
 import { swatchType } from '../utils/wineColour';
+// The page is built from SommMaturity's cards; import its styles too, or a
+// visit straight to the price queue renders them unstyled.
+import './SommMaturity.css';
 import './SommPrices.css';
 import { formatVintage } from '../utils/vintage';
 
