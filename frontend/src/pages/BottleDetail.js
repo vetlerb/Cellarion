@@ -686,7 +686,7 @@ function BottleDetail() {
                   product finding). No action is required of them — promotion
                   is automatic — so this is a statement, not a prompt. */}
               {displayProducer || <em className="bd-producer-pending">{t('bottleDetail.producerPending')}</em>}
-              {wine?.country?.name && <span className="bd-country">{displayProducer ? ' · ' : ' — '}{wine.country.name}</span>}
+              {wine?.country?.name && <span className="bd-country">{displayProducer ? '\u00a0· ' : '\u00a0— '}{wine.country.name}</span>}
             </p>
             {(wine?.type || wine?.nonWine) && (
               <span className={`wine-type-pill ${swatchType(wine)}`}>{wineTypeLabel(wine, t)}</span>

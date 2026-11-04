@@ -85,7 +85,7 @@ export default function TastingProfileCard({ wine, onReport }) {
       {ap.foodPairings?.length > 0 && (
         <div className="bd-ai-pairings">
           <span className="bd-ai-pairings__label">{t('bottleDetail.pairsWith', 'Pairs with')}:</span>
-          {ap.foodPairings.join(' · ')}
+          {ap.foodPairings.join('\u00a0· ')}
         </div>
       )}
 

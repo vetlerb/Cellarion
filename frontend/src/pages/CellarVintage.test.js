@@ -122,6 +122,8 @@ test('the wine, then the vintage, then the bottles — with the description, and
 
   expect(screen.getByText('Cassis, cedar and violets.')).toBeInTheDocument();
   expect(screen.getByText('Château Margaux · Margaux · France')).toBeInTheDocument();
+  // A no-break space before each dot, so a wrapped line never starts with one.
+  expect(document.querySelector('.cvb-wine-line').textContent).toBe('Château Margaux\u00a0· Margaux\u00a0· France');
   expect(screen.queryByTestId('beta-badge')).toBeNull();
   // The stock line heads the bottle list (no summary box above the page).
   const stock = document.querySelector('.cvb-bottles .cvb-stock');

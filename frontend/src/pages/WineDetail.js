@@ -314,7 +314,7 @@ export default function WineDetail() {
           {wine.aiProfile.foodPairings?.length > 0 && (
             <div className="bd-ai-pairings">
               <span className="bd-ai-pairings__label">{t('wineDetail.pairsWith', 'Pairs with')}:</span>
-              {wine.aiProfile.foodPairings.join(' · ')}
+              {wine.aiProfile.foodPairings.join('\u00a0· ')}
             </div>
           )}
           <ServingLine serving={wine.serving} user={user} t={t} />

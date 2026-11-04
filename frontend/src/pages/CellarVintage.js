@@ -56,6 +56,9 @@ const ImageGallery = lazy(() => import('../components/ImageGallery'));
 const ImageUpload = lazy(() => import('../components/ImageUpload'));
 
 const filled = (v) => v !== null && v !== undefined && String(v).trim() !== '';
+// The separator between joined facts. A no-break space before the dot keeps
+// it with the word before, so a wrapped line never starts with "· France".
+const DOT = '\u00a0· ';
 
 // More bottles than this and the list starts folded under its stock line.
 const FOLD_BOTTLES_OVER = 6;
@@ -591,7 +594,7 @@ function CellarVintage() {
                   <div className="cvb-wine-meta">
                     <div className="cvb-wine-name">{wine.name}</div>
                     <div className="cvb-wine-line">
-                      {[wine.producer, wine.region?.name, wine.country?.name].filter(Boolean).join(' · ')}
+                      {[wine.producer, wine.region?.name, wine.country?.name].filter(Boolean).join(DOT)}
                     </div>
                     {(wine.type || wine.nonWine) && <span className={`wine-type-pill ${swatchType(wine)}`}>{wineTypeLabel(wine, t)}</span>}
                   </div>
@@ -988,7 +991,7 @@ function BottleRow({ bottle, cellarId, fromPath, cellarList, showNote }) {
       <Link to={`/cellars/${cellarId}/bottles/${bottle._id}`} state={cellarList ? { fromVintage: fromPath, cellarList } : { fromVintage: fromPath }} className="cvb-bottle">
         <span className="cvb-bottle-main">
           <span className="cvb-bottle-slot"><span aria-hidden="true">📍</span> {slot}</span>
-          {facts.length > 0 && <span className="cvb-bottle-facts">{facts.join(' · ')}</span>}
+          {facts.length > 0 && <span className="cvb-bottle-facts">{facts.join(DOT)}</span>}
           {note && <span className="cvb-bottle-note">{note}</span>}
         </span>
         {(open || reserved) && (
