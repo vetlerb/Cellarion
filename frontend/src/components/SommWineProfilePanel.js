@@ -120,8 +120,15 @@ function SommWineProfilePanel({ wine, onSaved }) {
   }
 
   if (!editing) {
-    const descriptors = [profile.body, profile.tannin && `${profile.tannin} tannin`, profile.acidity && `${profile.acidity} acidity`, profile.sweetness]
-      .filter(Boolean).join(' · ');
+    // The stored values are codes ("full", "high", "off-dry"): show them as the
+    // editor's own option labels, and tannin/acidity as a sentence per language.
+    const valueLabel = (v) => t(`somm.profile.value.${String(v).replace('-', '')}`, v);
+    const descriptors = [
+      profile.body && valueLabel(profile.body),
+      profile.tannin && t('somm.profile.descriptor.tannin', { value: valueLabel(profile.tannin) }),
+      profile.acidity && t('somm.profile.descriptor.acidity', { value: valueLabel(profile.acidity) }),
+      profile.sweetness && valueLabel(profile.sweetness),
+    ].filter(Boolean).join(' · ');
     return (
       <div className="somm-profile-panel">
         <div className="somm-profile-head">

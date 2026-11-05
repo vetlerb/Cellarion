@@ -1929,6 +1929,22 @@
     "roleChanged": "Role changed: {{from}} → {{to}}",
     "bulkMoveDetail": "{{moved}} of {{requested}} bottles moved",
     "bulkDoneDetail": "{{done}} of {{requested}} bottles · {{what}}",
+    "field": {
+      "price": "price",
+      "currency": "currency",
+      "purchaseDate": "purchase date",
+      "purchaseLocation": "purchase location",
+      "purchaseUrl": "purchase link",
+      "reservedFor": "reserved for",
+      "reservedUntil": "reserved until",
+      "drinkFrom": "drink from",
+      "drinkTo": "drink until",
+      "peakFrom": "peak from",
+      "peakUntil": "peak until",
+      "notes": "notes",
+      "barcode": "barcode",
+      "expectedArrival": "expected arrival"
+    },
     "bulkArriveDetail": "{{done}} of {{requested}} bottles arrived",
     "bulkRestoreDetail": "{{done}} of {{requested}} bottles moved back"
   },
@@ -2886,6 +2902,10 @@
         "dry": "Dry",
         "offdry": "Off-dry",
         "sweet": "Sweet"
+      },
+      "descriptor": {
+        "tannin": "{{value}} tannin",
+        "acidity": "{{value}} acidity"
       }
     }
   },

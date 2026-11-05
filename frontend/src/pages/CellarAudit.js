@@ -6,6 +6,7 @@ import { getCellar, getCellarAudit } from '../api/cellars';
 import './CellarAudit.css';
 import { backLabel } from '../utils/backLabel';
 import { formatVintage } from '../utils/vintage';
+import { CONSUMED_LABEL_KEYS } from '../components/BottleJourney';
 
 function formatTimestamp(ts) {
   return new Date(ts).toLocaleString(undefined, {
@@ -102,9 +103,10 @@ function formatDetail(action, detail, t) {
     return t('cellarAudit.bulkRestoreDetail', { done: detail.done ?? 0, requested: detail.requested ?? 0 });
   }
   if (action === 'bottle.bulk_update' || action === 'bottle.bulk_consume') {
+    // Field names and reasons are stored as codes; show their labels.
     const what = action === 'bottle.bulk_update'
-      ? (Array.isArray(detail.fields) ? detail.fields.join(', ') : '')
-      : (detail.reason || '');
+      ? (Array.isArray(detail.fields) ? detail.fields.map((f) => t(`cellarAudit.field.${f}`, f)).join(', ') : '')
+      : (detail.reason ? t(CONSUMED_LABEL_KEYS[detail.reason] || '', detail.reason) : '');
     return t('cellarAudit.bulkDoneDetail', { done: detail.done ?? 0, requested: detail.requested ?? 0, what });
   }
   if (action === 'cellar.share.add') {
